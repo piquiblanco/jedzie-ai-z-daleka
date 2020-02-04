@@ -62,10 +62,10 @@ def rargmax(vector):
     return random.choices(indices_all, weights=weights)[0]
 
 
-# def rargmax(vector):
-#     m = np.amax(vector)
-#     vector_array = np.array(vector)
-#     is_best = vector_array == m
-#     indices_best = np.nonzero(is_best)[0]
-#     return random.choices(indices_best)[0]
-#
+def rargmax2(vector):
+    m = np.amax(vector)
+    vector_array = np.array(vector)
+    is_best = vector_array == m
+    indices_best = np.nonzero(is_best)[0]
+    return random.choices(indices_best)[0]
+

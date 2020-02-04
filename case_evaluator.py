@@ -32,7 +32,10 @@ class CaseEvaluator:
     def pick_best_case(self):
         for case in self.cases:
             self.values.append(self.evaluate_case(case))
-        self.best_case = tools.rargmax(self.values)
+        if self.map.greedy:
+            self.best_case = tools.rargmax2(self.values)
+        else:
+            self.best_case = tools.rargmax(self.values)
 
     def evaluate_case(self, case):
         simple_map = case['map']

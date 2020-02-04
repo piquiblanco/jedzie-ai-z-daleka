@@ -5,10 +5,11 @@ import pickle
 
 
 class OneGame:
-    def __init__(self, verbose, players, state_values):
+    def __init__(self, verbose, greedy, players, state_values):
         self.players = players
         self.turn_counter = 1
         self.verbose = verbose
+        self.greedy = greedy
         self.state_values = state_values
         self.station_finishers = {
             '03': [],
@@ -20,7 +21,7 @@ class OneGame:
             '20': [],
         }
         self.station_ranks = {key: len(self.station_finishers[key]) for key in self.station_finishers}
-        self.maps = {player: Map(player, verbose, state_values[player], self.station_finishers, self.station_ranks) for player in players}
+        self.maps = {player: Map(player, verbose, greedy, state_values[player], self.station_finishers, self.station_ranks) for player in players}
 
     def run_game(self):
         while self.turn_counter < 16:
@@ -33,13 +34,14 @@ class OneGame:
 
 
 class GameSeries:
-    def __init__(self, verbose, players):
+    def __init__(self, verbose, greedy, players):
         self.state_values = {}
         self.verbose = verbose
         self.players = players
+        self.greedy = greedy
         self.state_values = {player: {} for player in players}
         self.wins = {player: 0 for player in players}
-        self.all_results = pd.DataFrame(columns=['game', 'player', 'states', 'win', 'points', 'collisions'])
+        self.all_results = pd.DataFrame(columns=['game', 'greedy', 'player', 'states', 'win', 'points', 'collisions'])
         self.game_number = 1
 
     def vprint(self, txt):
@@ -47,8 +49,7 @@ class GameSeries:
             print(txt)
 
     def play_one_game(self):
-        # print('Game number {}, yo!'.format(self.game_number))
-        one_game = OneGame(self.verbose, self.players, self.state_values)
+        one_game = OneGame(self.verbose, self.greedy, self.players, self.state_values)
         one_game.run_game()
         points = [sum(one_game.maps[player].points) for player in one_game.maps]
         max_points = np.amax(points)
@@ -79,6 +80,7 @@ class GameSeries:
                     one_game.maps[player].state_values[key]['games'] = 1
             states = len([x for x in self.state_values[player] if self.state_values[player][x]['games'] > 1])
             to_append = pd.DataFrame({'game': self.game_number,
+                                      'greedy': self.greedy,
                                       'player': player,
                                       'states': states,
                                       'win': the_win,
@@ -90,4 +92,5 @@ class GameSeries:
 
     def resolve_game(self):
         self.all_results.to_excel('C:/Users/mszerszeniewski/Desktop/results.xlsx')
-        pickle.dump(self.state_values, open("save.p", "wb"))
+        pickle.dump(self.state_values, open("state_values.p", "wb"))
+        pickle.dump(self, open("game_series.p", "wb"))

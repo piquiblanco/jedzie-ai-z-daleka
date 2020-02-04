@@ -4,7 +4,7 @@ from copy import deepcopy
 
 
 class Map:
-    def __init__(self, player_name, verbose, state_values, station_finishers, station_ranks):
+    def __init__(self, player_name, verbose, greedy, state_values, station_finishers, station_ranks):
         self.cards = {
             0: ((1, 5), (2, 8), (3, 7), (4, 6)),
             1: ((1, 2), (3, 5), (4, 8), (6, 7)),
@@ -35,6 +35,8 @@ class Map:
         self.player_name = player_name
 
         self.verbose = verbose
+
+        self.greedy = greedy
 
         self.state_values = state_values
 
