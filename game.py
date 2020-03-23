@@ -18,10 +18,19 @@ class OneGame:
             '54': [],
             '52': [],
             '40': [],
-            '20': [],
+            '20': []
         }
-        self.station_ranks = {key: len(self.station_finishers[key]) for key in self.station_finishers}
-        self.maps = {player: Map(player, verbose, greedy, state_values[player], self.station_finishers, self.station_ranks) for player in players}
+        self.station_ranks = {
+            '03': 0,
+            '15': 0,
+            '35': 0,
+            '54': 0,
+            '52': 0,
+            '40': 0,
+            '20': 0
+        }
+        self.maps = {player: Map(player, verbose, greedy, state_values[player],
+                                 self.station_finishers, self.station_ranks) for player in players}
 
     def run_game(self):
         while self.turn_counter < 16:
@@ -30,7 +39,9 @@ class OneGame:
             for player in self.players:
                 self.maps[player].player_move()
             self.turn_counter += 1
-            self.station_ranks = {key: len(self.station_finishers[key]) for key in self.station_finishers}
+            # self.station_ranks = {key: len(self.station_finishers[key]) for key in self.station_finishers}
+            for station in self.station_ranks.keys():
+                self.station_ranks[station] = len(self.station_finishers[station])
 
 
 class GameSeries:
@@ -90,7 +101,14 @@ class GameSeries:
             self.all_results = self.all_results.append(to_append, ignore_index=True)
         self.game_number += 1
 
+    def analyze_state_values(self):
+        pass
+        # how many states discovered? move from each-turn
+        # mean and median of visits to discovered states
+        # mean and median of visits of states with max value per level
+        # mean and median of visits per level
+
     def resolve_game(self):
         self.all_results.to_excel('C:/Users/mszerszeniewski/Desktop/results.xlsx')
-        pickle.dump(self.state_values, open("state_values.p", "wb"))
+        pickle.dump(self.state_values, open("state_values_{}.p".format(self.game_number), "wb"))
         pickle.dump(self, open("game_series.p", "wb"))

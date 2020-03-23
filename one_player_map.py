@@ -162,8 +162,8 @@ class Map:
                 key += '0'
         for station in station_list:
             key += str(self.station_distance(station, train_positions))
-        for _, no in self.station_ranks:
-            key += str(no)
+        for station in self.station_ranks:
+            key += str(self.station_ranks[station])
         return key
 
     def draw_a_card(self):
@@ -205,5 +205,10 @@ class Map:
         self.move_scores.append(self.points[0])
         for station in self.new_stations:
             if self.player_name not in self.station_finishers[station]:
-                self.points[1] += self.stations[station][self.station_ranks[station]]
+                try:
+                    station_points = self.stations[station][self.station_ranks[station]]
+                except IndexError:
+                    station_points = 0
+                self.points[1] += station_points
+                self.vprint('{} reached station {} and got {} points'.format(self.player_name, station, str(station_points)))
             self.station_finishers[station].append(self.player_name)

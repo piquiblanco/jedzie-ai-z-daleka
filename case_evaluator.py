@@ -9,7 +9,7 @@ class SimpleMap:
         self.collisions = deepcopy(map_to_simplify.collisions)
         self.tracks = deepcopy(map_to_simplify.tracks)
         self.points = map_to_simplify.points[0]
-        self.new_stations = deepcopy(map_to_simplify.new_stations)
+        self.new_stations = []
         self.summary = []
 
 
@@ -25,6 +25,7 @@ class CaseEvaluator:
             for tag in available_train_tags:
                 for i in range(4):
                     self.cases.append({'tag': tag, 'rotation': i, 'map': SimpleMap(self.map)})
+            # self.cases.append({'tag': available_train_tags[0], 'rotation': 0, 'map': SimpleMap(self.map)})
         else:
             self.cases.append({'tag': self.map.available_tags[0], 'rotation': 0, 'map': SimpleMap(self.map)})
             self.cases[0]['map'].summary.append('No available destination for trains')
@@ -64,10 +65,10 @@ class CaseEvaluator:
     def try_move_trains(self, case):
         for train in [1, 2, 3, 4]:
             moving = 1
-            total_moves = 0
+            total_moves = -1
             start_position = case['map'].train_positions[train]
             new_position = '000'
-            if start_position != 'collided':
+            if start_position != 'collided' and start_position[2] != 's':
                 while moving == 1:
                     position = case['map'].train_positions[train]
                     total_moves += 1
@@ -99,7 +100,7 @@ class CaseEvaluator:
 
     def try_add_card(self, case):
         case['map'].map_structure[case['tag']] = (self.map.card_in_use[0], case['rotation'])
-        case['map'].summary.append("Player adds a card in position {}".format(case['tag']))
+        case['map'].summary.append("{} adds a card in position {}".format(self.map.player_name, case['tag']))
         self.try_update_paths(case)
         self.try_move_trains(case)
 
