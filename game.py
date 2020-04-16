@@ -47,6 +47,7 @@ class OneGame:
 class GameSeries:
     def __init__(self, verbose, greedy, players):
         self.state_values = {}
+        self.state_visits = pd.DataFrame(columns=['game', 'player', 'turn', 'key'])
         self.verbose = verbose
         self.players = players
         self.greedy = greedy
@@ -80,7 +81,13 @@ class GameSeries:
                 the_win = 0
             for i in range(len(one_game.maps[player].move_keys)):
                 key = one_game.maps[player].move_keys[i]
-                num = sum(one_game.maps[player].points) - one_game.maps[player].move_scores[i]
+                small_df = pd.DataFrame({'game': self.game_number,
+                                         'player': player,
+                                         'turn': i+1,
+                                         'key': key},
+                                        index=[0])
+                self.state_visits = self.state_visits.append(small_df, ignore_index=True)
+                num = player_points - one_game.maps[player].move_scores[i]
                 if key in one_game.maps[player].state_values:
                     one_game.maps[player].state_values[key]['metric'] += num
                     one_game.maps[player].state_values[key]['games'] += 1
@@ -109,6 +116,10 @@ class GameSeries:
         # mean and median of visits per level
 
     def resolve_game(self):
-        self.all_results.to_excel('C:/Users/mszerszeniewski/Desktop/results.xlsx')
-        pickle.dump(self.state_values, open("state_values_{}.p".format(self.game_number), "wb"))
+        with open('results.csv', 'a') as f:
+            self.all_results.to_csv(f, header=f.tell() == 0)
+        with open('state_visits.csv', 'a') as f:
+            self.state_visits.to_csv(f, header=f.tell() == 0)
+        self.state_visits = pd.DataFrame(columns=['game', 'player', 'turn', 'key'])
+        self.all_results = pd.DataFrame(columns=['game', 'greedy', 'player', 'states', 'win', 'points', 'collisions'])
         pickle.dump(self, open("game_series.p", "wb"))

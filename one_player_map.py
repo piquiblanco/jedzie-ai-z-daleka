@@ -139,7 +139,7 @@ class Map:
             dist = abs(s_a - t_a) + abs(s_b + t_b)
             return dist
         else:
-            return 9999
+            return 99
 
     def station_distance(self, station, train_positions=None):
         if train_positions is None:
@@ -152,16 +152,20 @@ class Map:
             map_structure = self.map_structure
             train_positions = self.train_positions
             collisions = self.collisions
-        key = str(collisions)
+        key = str(collisions) + '-'
+        cards = 0
         tag_list = ['21', '31', '41', '12', '22', '32', '42', '13', '23', '33', '43', '14', '24', '34', '44']
         station_list = ['03', '15', '35', '54', '52', '40', '20']
         for tag in tag_list:
             if tag in map_structure:
                 key += '1'
+                cards += 1
             else:
                 key += '0'
+        key = str(cards) + '-' + key + '-'
         for station in station_list:
             key += str(self.station_distance(station, train_positions))
+        key += '-'
         for station in self.station_ranks:
             key += str(self.station_ranks[station])
         return key

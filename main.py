@@ -5,23 +5,23 @@ import pandas as pd
 # with open(filename + '.json', encoding='utf-8') as data_file:
 #     player_input = json.loads(data_file.read())
 
-players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
+# players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
 
-# players = ['The Only']
+players = ['The Only']
 
 game = game.GameSeries(False, False, players)
 
-game = pickle.load(open("game_series.p", "rb"))
+# game = pickle.load(open("game_series.p", "rb"))
 
 i = 0
 
 while(True):
     i += 1
     game.greedy = False
-    for _ in range(9000):
+    for _ in range(90):
         game.play_one_game()
     game.greedy = True
-    for _ in range(1000):
+    for _ in range(10):
         game.play_one_game()
     game.resolve_game()
     print("Batch {} done!".format(i))
