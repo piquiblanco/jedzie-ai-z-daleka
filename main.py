@@ -15,6 +15,8 @@ game = game.GameSeries(False, False, players)
 
 i = 0
 
+# game.play_one_game()
+
 while(True):
     i += 1
     game.greedy = False

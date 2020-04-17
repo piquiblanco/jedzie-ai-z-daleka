@@ -136,10 +136,13 @@ class Map:
         if train_position != 'collided' and train_position[2] != 's':
             s_a, s_b = tools.split_tag(station)
             t_a, t_b = tools.split_tag(train_position[0:2])
-            dist = abs(s_a - t_a) + abs(s_b + t_b)
+            dist = abs(s_a - t_a) + abs(s_b - t_b)
             return dist
         else:
-            return 99
+            if train_position[2] == 's' and train_position[0:2] == station:
+                return 0
+            else:
+                return 99
 
     def station_distance(self, station, train_positions=None):
         if train_positions is None:
