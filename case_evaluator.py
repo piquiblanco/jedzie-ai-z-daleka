@@ -91,7 +91,7 @@ class CaseEvaluator:
                                 for x in case["map"].train_positions
                                 if case["map"].train_positions[x] == through
                             ][0]
-                            self.map.vprint(
+                            case["map"].summary.append(
                                 "Trains {} and {} have collided!".format(
                                     train, colliding_train
                                 )
@@ -99,6 +99,7 @@ class CaseEvaluator:
                             case["map"].train_positions[train] = "collided"
                             case["map"].train_positions[colliding_train] = "collided"
                             case["map"].collisions += 1
+                            total_moves += 1
                             moving = 0
                         else:
                             case["map"].train_positions[train] = new_position
