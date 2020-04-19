@@ -20,10 +20,10 @@ i = 0
 while(True):
     i += 1
     game.greedy = False
-    for _ in range(90):
+    for _ in range(900):
         game.play_one_game()
     game.greedy = True
-    for _ in range(10):
+    for _ in range(100):
         game.play_one_game()
     game.resolve_game()
     print("Batch {} done!".format(i))

@@ -69,6 +69,8 @@ class GameSeries:
                 "player",
                 "states",
                 "win",
+                "tracks",
+                "stations",
                 "points",
                 "collisions",
             ]
@@ -139,7 +141,7 @@ class GameSeries:
                     "states": states,
                     "win": the_win,
                     "tracks": one_game.maps[player].points[0],
-                    "stations": one_game.maps[player].points[0],
+                    "stations": one_game.maps[player].points[1],
                     "points": player_points,
                     "collisions": player_collisions,
                 },
