@@ -130,7 +130,7 @@ class Map:
             print(txt)
 
     def discover_state(self, state_key):
-        self.state_values[state_key] = {"metric": 150, "games": 1}
+        self.state_values[state_key] = {"metric": 150, "games": 1, "value": 150}
 
     def train_station_distance(self, train, station, train_positions=None):
         if train_positions is None:

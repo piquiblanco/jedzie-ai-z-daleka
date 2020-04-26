@@ -56,7 +56,7 @@ class OneGame:
 class GameSeries:
     def __init__(self, verbose, greedy, players):
         self.state_values = {}
-        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key"])
+        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key", "value"])
         self.verbose = verbose
         self.players = players
         self.greedy = greedy
@@ -105,27 +105,25 @@ class GameSeries:
                 the_win = 0
             for i in range(len(one_game.maps[player].move_keys)):
                 key = one_game.maps[player].move_keys[i]
+                num = player_points - one_game.maps[player].move_scores[i]
                 small_df = pd.DataFrame(
                     {
                         "game": self.game_number,
                         "player": player,
                         "turn": i + 1,
                         "key": key,
+                        "value": num
                     },
                     index=[0],
                 )
                 self.state_visits = self.state_visits.append(
                     small_df, ignore_index=True
                 )
-                num = player_points - one_game.maps[player].move_scores[i]
-                if key in one_game.maps[player].state_values:
-                    one_game.maps[player].state_values[key]["metric"] += num
-                    one_game.maps[player].state_values[key]["games"] += 1
-                else:
-                    print("Something is not uppppe")
-                    one_game.maps[player].state_values[key] = {}
-                    one_game.maps[player].state_values[key]["metric"] = num
-                    one_game.maps[player].state_values[key]["games"] = 1
+                one_game.maps[player].state_values[key]["metric"] += num
+                one_game.maps[player].state_values[key]["games"] += 1
+                one_game.maps[player].state_values[key]["value"] = (
+                    one_game.maps[player].state_values[key]["value"] * 0.7 + num * 0.3
+                )
             states = len(
                 [
                     x

@@ -55,7 +55,7 @@ class CaseEvaluator:
         if key not in self.map.state_values.keys():
             self.map.discover_state(key)
         key_entry = self.map.state_values[key]
-        value = key_entry["metric"] / key_entry["games"] + simple_map.points
+        value = key_entry["value"] + simple_map.points
         return value
 
     def trains_next(self):
