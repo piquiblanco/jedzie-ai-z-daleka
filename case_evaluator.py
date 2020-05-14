@@ -27,7 +27,6 @@ class CaseEvaluator:
                     self.cases.append(
                         {"tag": tag, "rotation": i, "map": SimpleMap(self.map)}
                     )
-            # self.cases.append({'tag': available_train_tags[0], 'rotation': 0, 'map': SimpleMap(self.map)})
         else:
             self.cases.append(
                 {
