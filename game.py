@@ -56,7 +56,7 @@ class OneGame:
 class GameSeries:
     def __init__(self, verbose, greedy, players):
         self.state_values = {}
-        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key"])
+        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key", "value"])
         self.verbose = verbose
         self.players = players
         self.greedy = greedy
@@ -105,19 +105,21 @@ class GameSeries:
                 the_win = 0
             for i in range(len(one_game.maps[player].move_keys)):
                 key = one_game.maps[player].move_keys[i]
+                key_value = one_game.maps[player].move_values[i]
                 small_df = pd.DataFrame(
                     {
                         "game": self.game_number,
                         "player": player,
                         "turn": i + 1,
                         "key": key,
+                        "value": key_value
                     },
                     index=[0],
                 )
                 self.state_visits = self.state_visits.append(
                     small_df, ignore_index=True
                 )
-                num = player_points - one_game.maps[player].move_scores[i]
+                num = player_points - one_game.maps[player].move_scores[i] - one_game.maps[player].station_scores[i]
                 if key in one_game.maps[player].state_values:
                     one_game.maps[player].state_values[key]["metric"] += num
                     one_game.maps[player].state_values[key]["games"] += 1
@@ -149,13 +151,6 @@ class GameSeries:
             )
             self.all_results = self.all_results.append(to_append, ignore_index=True)
         self.game_number += 1
-
-    def analyze_state_values(self):
-        pass
-        # how many states discovered? move from each-turn
-        # mean and median of visits to discovered states
-        # mean and median of visits of states with max value per level
-        # mean and median of visits per level
 
     def resolve_game(self):
         with open("results.csv", "a") as f:

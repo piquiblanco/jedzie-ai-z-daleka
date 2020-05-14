@@ -8,7 +8,8 @@ class SimpleMap:
         self.train_positions = deepcopy(map_to_simplify.train_positions)
         self.collisions = deepcopy(map_to_simplify.collisions)
         self.tracks = deepcopy(map_to_simplify.tracks)
-        self.points = map_to_simplify.points[0]
+        self.points = deepcopy(map_to_simplify.points)
+        self.station_finishers = deepcopy(map_to_simplify.station_finishers)
         self.new_stations = []
         self.summary = []
 
@@ -18,7 +19,9 @@ class CaseEvaluator:
         self.map = map_to_evaluate
         self.cases = []
         self.values = []
+        self.simple_values = []
         self.best_case = None
+        self.best_case_value = 0
 
         available_train_tags = self.trains_next()
         if available_train_tags:
@@ -39,11 +42,14 @@ class CaseEvaluator:
 
     def pick_best_case(self):
         for case in self.cases:
-            self.values.append(self.evaluate_case(case))
+            simple_value, value = self.evaluate_case(case)
+            self.simple_values.append(simple_value)
+            self.values.append(value)
         if self.map.greedy:
             self.best_case = tools.rargmax2(self.values)
         else:
             self.best_case = tools.rargmax(self.values)
+        self.best_case_value = self.simple_values[self.best_case]
 
     def evaluate_case(self, case):
         simple_map = case["map"]
@@ -54,8 +60,9 @@ class CaseEvaluator:
         if key not in self.map.state_values.keys():
             self.map.discover_state(key)
         key_entry = self.map.state_values[key]
-        value = key_entry["metric"] / key_entry["games"] + simple_map.points
-        return value
+        simple_value = key_entry["metric"] / key_entry["games"]
+        value = simple_value + simple_map.points[0] + simple_map.points[1]
+        return simple_value, value
 
     def trains_next(self):
         available_train_tags = []
@@ -115,7 +122,20 @@ class CaseEvaluator:
                             train, start_position, end_position, total_moves
                         )
                     )
-                case["map"].points += total_moves
+                case["map"].points[0] += total_moves
+                for station in case["map"].new_stations:
+                    if self.map.player_name not in case["map"].station_finishers[station]:
+                        try:
+                            station_points = self.map.stations[station][self.map.station_ranks[station]]
+                        except IndexError:
+                            station_points = 0
+                        case["map"].points[1] += station_points
+                        case["map"].summary.append(
+                            "{} reached station {} and got {} points".format(
+                                self.map.player_name, station, str(station_points)
+                            )
+                        )
+                    case["map"].station_finishers[station].append(self.map.player_name)
 
     def try_add_card(self, case):
         case["map"].map_structure[case["tag"]] = (

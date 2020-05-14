@@ -50,7 +50,11 @@ class Map:
 
         self.move_keys = []
 
+        self.move_values = []
+
         self.move_scores = [0]
+
+        self.station_scores = [0]
 
         self.points = [0, 0]  # first moving trains, second stations
 
@@ -231,22 +235,16 @@ class Map:
         self.update_available_tags(best_case["tag"])
         self.new_stations = deepcopy(best_case["map"].new_stations)
         self.tracks = deepcopy(best_case["map"].tracks)
-        self.points[0] = best_case["map"].points
+        self.points[0] = best_case["map"].points[0]
+        self.points[1] = best_case["map"].points[1]
         self.collisions = best_case["map"].collisions
         self.train_positions = deepcopy(best_case["map"].train_positions)
-        new_key = self.get_new_key()
+        new_key = self.get_new_key(best_case["map"].map_structure,
+                                   best_case["map"].train_positions,
+                                   best_case["map"].collisions)
         self.move_keys.append(new_key)
+        self.move_values.append(case_evaluator.best_case_value)
         self.move_scores.append(self.points[0])
-        for station in self.new_stations:
-            if self.player_name not in self.station_finishers[station]:
-                try:
-                    station_points = self.stations[station][self.station_ranks[station]]
-                except IndexError:
-                    station_points = 0
-                self.points[1] += station_points
-                self.vprint(
-                    "{} reached station {} and got {} points".format(
-                        self.player_name, station, str(station_points)
-                    )
-                )
-            self.station_finishers[station].append(self.player_name)
+        self.station_scores.append(self.points[1])
+        self.station_finishers = deepcopy(best_case["map"].station_finishers)
+
