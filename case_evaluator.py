@@ -9,7 +9,6 @@ class SimpleMap:
         self.collisions = deepcopy(map_to_simplify.collisions)
         self.tracks = deepcopy(map_to_simplify.tracks)
         self.points = deepcopy(map_to_simplify.points)
-        self.station_finishers = deepcopy(map_to_simplify.station_finishers)
         self.new_stations = []
         self.summary = []
 
@@ -124,7 +123,7 @@ class CaseEvaluator:
                     )
                 case["map"].points[0] += total_moves
                 for station in case["map"].new_stations:
-                    if self.map.player_name not in case["map"].station_finishers[station]:
+                    if self.map.player_name not in self.map.station_finishers[station]:
                         try:
                             station_points = self.map.stations[station][self.map.station_ranks[station]]
                         except IndexError:
@@ -135,7 +134,6 @@ class CaseEvaluator:
                                 self.map.player_name, station, str(station_points)
                             )
                         )
-                    case["map"].station_finishers[station].append(self.map.player_name)
 
     def try_add_card(self, case):
         case["map"].map_structure[case["tag"]] = (

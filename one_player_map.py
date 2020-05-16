@@ -149,7 +149,7 @@ class Map:
             if train_position[2] == "s" and train_position[0:2] == station:
                 return 0
             else:
-                return 99
+                return 9
 
     def station_distance(self, station, train_positions=None):
         if train_positions is None:
@@ -233,7 +233,6 @@ class Map:
             best_case["rotation"],
         )
         self.update_available_tags(best_case["tag"])
-        self.new_stations = deepcopy(best_case["map"].new_stations)
         self.tracks = deepcopy(best_case["map"].tracks)
         self.points[0] = best_case["map"].points[0]
         self.points[1] = best_case["map"].points[1]
@@ -246,5 +245,6 @@ class Map:
         self.move_values.append(case_evaluator.best_case_value)
         self.move_scores.append(self.points[0])
         self.station_scores.append(self.points[1])
-        self.station_finishers = deepcopy(best_case["map"].station_finishers)
-
+        self.new_stations = deepcopy(best_case["map"].new_stations)
+        for station in self.new_stations:
+            self.station_finishers[station].append(self.player_name)
