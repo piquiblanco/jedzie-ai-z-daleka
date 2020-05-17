@@ -102,9 +102,6 @@ class GameSeries:
                 the_win = 1
             else:
                 the_win = 0
-            dd = one_game.maps[player].station_scores
-            if dd[15] != dd[14]:
-                print(dd)
             for i in range(len(one_game.maps[player].move_keys)):
                 key = one_game.maps[player].move_keys[i]
                 key_value = one_game.maps[player].move_values[i]
