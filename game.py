@@ -56,7 +56,7 @@ class OneGame:
 class GameSeries:
     def __init__(self, verbose, greedy, players):
         self.state_values = {}
-        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key"])
+        self.state_visits = pd.DataFrame(columns=["game", "player", "turn", "key", "value", "tracks", "stations"])
         self.verbose = verbose
         self.players = players
         self.greedy = greedy
@@ -105,12 +105,16 @@ class GameSeries:
                 the_win = 0
             for i in range(len(one_game.maps[player].move_keys)):
                 key = one_game.maps[player].move_keys[i]
+                key_value = one_game.maps[player].move_values[i]
                 small_df = pd.DataFrame(
                     {
                         "game": self.game_number,
                         "player": player,
                         "turn": i + 1,
                         "key": key,
+                        "value": key_value,
+                        "tracks": one_game.maps[player].move_scores[i],
+                        "stations": one_game.maps[player].station_scores[i]
                     },
                     index=[0],
                 )

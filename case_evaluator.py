@@ -18,7 +18,9 @@ class CaseEvaluator:
         self.map = map_to_evaluate
         self.cases = []
         self.values = []
+        self.simple_values = []
         self.best_case = None
+        self.best_case_value = 0
 
         available_train_tags = self.trains_next()
         if available_train_tags:
@@ -39,11 +41,14 @@ class CaseEvaluator:
 
     def pick_best_case(self):
         for case in self.cases:
-            self.values.append(self.evaluate_case(case))
+            simple_value, value = self.evaluate_case(case)
+            self.simple_values.append(simple_value)
+            self.values.append(value)
         if self.map.greedy:
             self.best_case = tools.rargmax2(self.values)
         else:
             self.best_case = tools.rargmax(self.values)
+        self.best_case_value = self.simple_values[self.best_case]
 
     def evaluate_case(self, case):
         simple_map = case["map"]
@@ -54,8 +59,9 @@ class CaseEvaluator:
         if key not in self.map.state_values.keys():
             self.map.discover_state(key)
         key_entry = self.map.state_values[key]
-        value = key_entry["metric"] / key_entry["games"] + simple_map.points
-        return value
+        simple_value = key_entry["metric"] / key_entry["games"]
+        value = simple_value + simple_map.points
+        return simple_value, value
 
     def trains_next(self):
         available_train_tags = []

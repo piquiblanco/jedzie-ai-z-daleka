@@ -50,7 +50,11 @@ class Map:
 
         self.move_keys = []
 
+        self.move_values = []
+
         self.move_scores = [0]
+
+        self.station_scores = [0]
 
         self.points = [0, 0]  # first moving trains, second stations
 
@@ -236,7 +240,7 @@ class Map:
         self.train_positions = deepcopy(best_case["map"].train_positions)
         new_key = self.get_new_key()
         self.move_keys.append(new_key)
-        self.move_scores.append(self.points[0])
+        self.move_values.append(case_evaluator.best_case_value)
         for station in self.new_stations:
             if self.player_name not in self.station_finishers[station]:
                 try:
@@ -250,3 +254,5 @@ class Map:
                     )
                 )
             self.station_finishers[station].append(self.player_name)
+        self.move_scores.append(self.points[0])
+        self.station_scores.append(self.points[1])
