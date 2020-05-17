@@ -122,18 +122,18 @@ class CaseEvaluator:
                         )
                     )
                 case["map"].points[0] += total_moves
-            for station in case["map"].new_stations:
-                if self.map.player_name not in self.map.station_finishers[station]:
-                    try:
-                        station_points = self.map.stations[station][self.map.station_ranks[station]]
-                    except IndexError:
-                        station_points = 0
-                    case["map"].points[1] += station_points
-                    case["map"].summary.append(
-                        "{} reached station {} and got {} points".format(
-                            self.map.player_name, station, str(station_points)
-                        )
+        for station in case["map"].new_stations:
+            if self.map.player_name not in self.map.station_finishers[station]:
+                try:
+                    station_points = self.map.stations[station][self.map.station_ranks[station]]
+                except IndexError:
+                    station_points = 0
+                case["map"].points[1] += station_points
+                case["map"].summary.append(
+                    "{} reached station {} and got {} points".format(
+                        self.map.player_name, station, str(station_points)
                     )
+                )
 
     def try_add_card(self, case):
         case["map"].map_structure[case["tag"]] = (
