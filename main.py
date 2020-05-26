@@ -1,17 +1,13 @@
 import game, pickle
-import pandas as pd
-# filename = sys.argv[1]
 
-# with open(filename + '.json', encoding='utf-8') as data_file:
-#     player_input = json.loads(data_file.read())
+players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
 
-# players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
+# players = ['The Only']
 
-players = ['The Only']
+game = game.GameSeries(False, False, players) # verbose, greedy
 
-game = game.GameSeries(False, False, players) #verbose, greedy
-
-# game = pickle.load(open("game_series.p", "rb"))
+# with open("game_series.p", "wb") as f:
+#     game = pickle.load(open("game_series.p", "rb"))
 
 i = 0
 
@@ -20,10 +16,10 @@ i = 0
 while(True):
     i += 1
     game.greedy = False
-    for _ in range(9):
+    for _ in range(9000):
         game.play_one_game()
     game.greedy = True
-    for _ in range(1):
+    for _ in range(1000):
         game.play_one_game()
     game.resolve_game()
     print("Batch {} done!".format(i))
