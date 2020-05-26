@@ -5,13 +5,14 @@ import pandas as pd
 # with open(filename + '.json', encoding='utf-8') as data_file:
 #     player_input = json.loads(data_file.read())
 
-# players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
+players = ['Kbash', 'Wiksa', 'Pogan', 'Alter']
 
-players = ['The Only']
+# players = ['The Only']
 
 game = game.GameSeries(False, False, players)
 
-# game = pickle.load(open("game_series.p", "rb"))
+# with open("game_series.p", "wb") as f:
+#     game = pickle.load(f)
 
 i = 0
 

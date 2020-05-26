@@ -180,4 +180,5 @@ class GameSeries:
                 "collisions",
             ]
         )
-        pickle.dump(self, open("game_series.p", "wb"))
+        with open("game_series.p", "wb") as f:
+            pickle.dump(self, f)
